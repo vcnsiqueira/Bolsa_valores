@@ -1,0 +1,28 @@
+class Negociacao {
+
+    constructor(data, quantidade, valor) {
+        
+        this._data = new Date(data.getTime()); // this._ é uma convenção para dizer que a propriedade é somente leitura
+        this._quantidade = quantidade;
+        this._valor = valor;
+
+        //Object.freeze(this);
+    }
+
+    get volume() {
+        return this._quantidade * this._valor;
+    }
+
+    get data()  {
+        return new Date(this._data.getTime()); // programação defensiva: criando um novo objeto de modo que se o usuário tentar alterar o valor da propriedade do construtor, ele não vai conseguir.
+    }
+
+    get quantidade() {
+        return this._quantidade;
+    }
+
+    get valor() {
+        return this._valor;
+    }
+
+}
