@@ -8,10 +8,17 @@ class NegociacaoController {
         this._inputQuantidade = $('#quantidade');  // incluindo o seletor dentro do constructor para que o DOM seja percorrido uma única vez
         this._inputValor = $('#valor');  // incluindo o seletor dentro do constructor para que o DOM seja percorrido uma única vez
         
-        this._listaNegociacoes = ProxyFactory.create( //ProxyFactory criado na pasta services
+        
+        this._listaNegociacoes = new Bind(
+            new ListaNegociacoes(),
+            new NegociacoesView($('#negociacoesView')), //incluindo a tabela de negociações como propriedade do controller
+            'adiciona', 'esvazia');
+        
+        /*ProxyFactory.create( //ProxyFactory criado na pasta services
             new ListaNegociacoes(), 
             ['adiciona', 'esvazia'], model =>
                 this._negociacoesView.update(model));        
+        */
         
         
         /* código antes da adoção do padrão proxy
@@ -19,15 +26,19 @@ class NegociacaoController {
             this._negociacoesView.update(modelo)); //incluindo a lista de negociações como propriedade do controller
         */ 
         
-        this._negociacoesView = new NegociacoesView($('#negociacoesView')); //incluindo a tabela de negociações como propriedade do controller
-        this._negociacoesView.update(this._listaNegociacoes);
         
-        this._mensagem = ProxyFactory.create(
+        //this._negociacoesView.update(this._listaNegociacoes);
+        //this._mensagemView.update(this._mensagem);
+        this._mensagem = new Bind(
+            new Mensagem(),
+            new MensagemView($('#mensagemView')),
+            'texto'); 
+        
+        /*ProxyFactory.create(
             new Mensagem(), ['texto'], model =>
             this._mensagemView.update(model));
-
-        this._mensagemView = new MensagemView($('#mensagemView'));
-        this._mensagemView.update(this._mensagem);
+            */
+        
         
 
     }
