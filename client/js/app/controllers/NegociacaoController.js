@@ -57,6 +57,19 @@ class NegociacaoController {
 
         let service = new NegociacaoService();
 
+        Promise.all([
+            service.obterNegociacoesDaSemana(), 
+            service.obterNegociacoesDaSemanaAnterior(),
+            service.obterNegociacoesDaSemanaRetrasada()]
+        ).then(negociacoes => {
+            negociacoes
+                .reduce((arrayAchatado, array) => arrayAchatado.concat(array, []))
+                .forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
+            this._mensagem.texto = 'Negociações importados com sucesso!'
+        })
+        .catch(erro => this._mensagem.texto = erro);
+
+        /* funções utilizando promises
         service.obterNegociacoesDaSemana()  //usando o padrão promise
             .then(negociacoes => {  // caso sucesso da promise
                 negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao))
@@ -78,7 +91,9 @@ class NegociacaoController {
             })
             .catch(erro => this._mensagem.texto = erro) // caso erro da promise
 
-        /*
+        */
+
+        /* funções utilizando o callback
         service.obterNegociacoesDaSemana((erro, negociacoes) => {
             
             if(erro) {
