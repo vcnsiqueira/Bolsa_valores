@@ -65,7 +65,7 @@ class NegociacaoController {
             negociacoes
                 .reduce((arrayAchatado, array) => arrayAchatado.concat(array, []))
                 .forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
-            this._mensagem.texto = 'Negociações importados com sucesso!'
+            this._mensagem.texto = 'Negociações importadas com sucesso!'
         })
         .catch(erro => this._mensagem.texto = erro);
 
