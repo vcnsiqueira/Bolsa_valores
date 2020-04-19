@@ -56,6 +56,29 @@ class NegociacaoController {
     importaNegociacoes() {
 
         let service = new NegociacaoService();
+
+        service.obterNegociacoesDaSemana()  //usando o padrão promise
+            .then(negociacoes => {  // caso sucesso da promise
+                negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao))
+                this._mensagem.texto = 'Negociações da semana obtidas com sucesso!'
+            })
+            .catch(erro => this._mensagem.texto = erro) // caso erro da promise
+
+        service.obterNegociacoesDaSemanaAnterior()  //usando o padrão promise
+            .then(negociacoes => {  // caso sucesso da promise
+                negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao))
+                this._mensagem.texto = 'Negociações da semana passada obtidas com sucesso!'
+            })
+            .catch(erro => this._mensagem.texto = erro) // caso erro da promise 
+
+        service.obterNegociacoesDaSemanaRetrasada()  //usando o padrão promise
+            .then(negociacoes => {  // caso sucesso da promise
+                negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao))
+                this._mensagem.texto = 'Negociações da semana retrasada obtidas com sucesso!'
+            })
+            .catch(erro => this._mensagem.texto = erro) // caso erro da promise
+
+        /*
         service.obterNegociacoesDaSemana((erro, negociacoes) => {
             
             if(erro) {
@@ -82,7 +105,7 @@ class NegociacaoController {
                     this._mensagem.texto = 'Negociações importadas com sucesso!';
                 });
             });
-        });
+        });*/
 
     }
 
