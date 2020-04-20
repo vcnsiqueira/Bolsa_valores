@@ -7,12 +7,12 @@ class NegociacaoController {
         this._inputData = $('#data');  // incluindo o seletor dentro do constructor para que o DOM seja percorrido uma única vez
         this._inputQuantidade = $('#quantidade');  // incluindo o seletor dentro do constructor para que o DOM seja percorrido uma única vez
         this._inputValor = $('#valor');  // incluindo o seletor dentro do constructor para que o DOM seja percorrido uma única vez
-        
+        this._ordemAtual = ''; // quando a página for carregada, não tem nada, quando o usuário clicar em alguma coluna para ordenar, deve receber o nome da coluna
         
         this._listaNegociacoes = new Bind(
             new ListaNegociacoes(),
             new NegociacoesView($('#negociacoesView')), //incluindo a tabela de negociações como propriedade do controller
-            'adiciona', 'esvazia');
+            'adiciona', 'esvazia', 'ordena', 'inverteOrdem');
         
         /*ProxyFactory.create( //ProxyFactory criado na pasta services
             new ListaNegociacoes(), 
@@ -149,6 +149,15 @@ class NegociacaoController {
         this._inputValor.value = 0.0;
 
         this._inputData.focus();
+    }
+
+    ordena(coluna) {
+        if(this._ordemAtual == coluna) {
+            this._listaNegociacoes.inverteOrdem();
+        } else{
+            this._listaNegociacoes.ordena((a,b) => a[coluna] - b[coluna]);
+        }
+        this._ordemAtual = coluna;
     }
 
 }
