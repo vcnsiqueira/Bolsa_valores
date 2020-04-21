@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Aprendendo IndexedDB</title>
+</head>
+<body>
+    <script>
+    
+        let openRequest = window.indexedDB.open('bolsa', 1); // pedindo uma requisição de abertura ao indexedDB.
+
+        openRequest.onupgradeneeded = e => console.log('Cria ou altera um banco já existente'); // método para iniciar o banco
+        openRequest.onsuccess = e => console.log('Conexão obtida com sucesso'); // método para verificar se a conexão funcionou
+        openRequest.onerror = e => console.log(e.target.error); // método para verificar se a conexão falhou
+
+    </script>
+</body>
+</html>
