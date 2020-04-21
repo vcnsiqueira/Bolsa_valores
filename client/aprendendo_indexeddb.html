@@ -5,13 +5,65 @@
     <title>Aprendendo IndexedDB</title>
 </head>
 <body>
+    <script src="js/app/models/Negociacao.js"></script>
     <script>
-    
-        let openRequest = window.indexedDB.open('bolsa', 1); // pedindo uma requisição de abertura ao indexedDB.
+        
+        let connection;
 
-        openRequest.onupgradeneeded = e => console.log('Cria ou altera um banco já existente'); // método para iniciar o banco
-        openRequest.onsuccess = e => console.log('Conexão obtida com sucesso'); // método para verificar se a conexão funcionou
-        openRequest.onerror = e => console.log(e.target.error); // método para verificar se a conexão falhou
+        let openRequest = window.indexedDB.open('bolsa', 3); // pedindo uma requisição de abertura ao indexedDB (recebe como parâmetros o nome do banco e a versão do db).
+
+        openRequest.onupgradeneeded = e => {
+            console.log('Cria ou altera um banco já existente'); // método para iniciar o banco
+            let minhaConnection = e.target.result; // atribuindo o resultado a variável minhaConnection
+            if(minhaConnection.objectStoreNames.contains('negociacoes')) { // verifica se já existe a object store negociacoes e, em caso afirmartivo, a destroi
+                minhaConnection.deleteObjectStore('negociacoes')
+            }
+            minhaConnection.createObjectStore('negociacoes', { autoIncrement: true }); //criando um object store (tabela do banco de dados)
+        }
+        openRequest.onsuccess = e => {
+            console.log('Conexão obtida com sucesso'); // método para verificar se a conexão funcionou
+            connection = e.target.result; // atribuindo o resultado da conexão na variável connection (instância do database)
+        }
+        openRequest.onerror = e => {
+            console.log(e.target.error); // método para verificar se a conexão falhou
+        }
+
+        function adiciona() { // função para adicionar negociações ao banco
+            let transaction = connection.transaction(['negociacoes'], 'readwrite'); // abrindo uma transação no object store negociações de leitura e escrita
+            let store = transaction.objectStore('negociacoes'); // obtendo a object store
+            let negociacao = new Negociacao(new Date(), 1, 200); // criando uma negociação
+            let request = store.add(negociacao) // fazendo uma requisição para adicionar a negociação no object store (pode funcionar ou não)
+            request.onsuccess = e => { // caso a requisição de adição funcione 
+                console.log('Negociação incluída com sucesso');
+            };
+            request.onerror = e => { // caso a requisição de adição não funcione
+                onsole.log('Não foi possível incluir a negociação!');
+            }
+        };
+
+        function listaTodos() { // função para buscar as negociações cadastradas no banco
+            let transaction = connection.transaction(['negociacoes'], 'readwrite'); // abrindo uma transação no object store negociações de leitura e escrita
+            let store = transaction.objectStore('negociacoes'); // obtendo a object store
+            let cursor = store.openCursor(); //cursor é o cara que pode passear pela objectStore
+            let negociacoes = []; // iniciando a variável negociacoes vazia para, em caso de sucesso, incluir a negociação aqui
+            cursor.onsuccess = e => {
+                let atual = e.target.result; // ponteiro para a negociação do banco
+                if(atual) { // Se há dados para extrair da object store
+                    let dado = atual.value // extrair o dado do ponteiro
+                    negociacoes.push(new Negociacao(dado._data, dado._quantidade, dado._valor)); // acrescenta a negociação na lista
+                    atual.continue(); // repete
+                } else {
+                    console.log(negociacoes);
+                }
+            };
+            cursor.onerror = e => {
+                console.log(e.target.error.name);
+            };
+
+        }
+
+        //adiciona();
+
 
     </script>
 </body>
