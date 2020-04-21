@@ -37,7 +37,7 @@
                 console.log('Negociação incluída com sucesso');
             };
             request.onerror = e => { // caso a requisição de adição não funcione
-                onsole.log('Não foi possível incluir a negociação!');
+                console.log('Não foi possível incluir a negociação!');
             }
         };
 
@@ -60,9 +60,29 @@
                 console.log(e.target.error.name);
             };
 
+            Connection
+
         }
 
-        //adiciona();
+        ConnectionFactory
+            .getConnection()
+            .then(connection => {
+                // usa a conexão
+            });
+
+        ConnectionFactory
+            .getConnection()
+            .then(connection => {
+                // a conexão tem que ser a mesma utilizada anteriormente
+            })
+
+        /*
+        a) getConnection vai ser um método estático da classe ConnectionFactory
+        b) getConnection vai retornar uma promise (faz sentido, uma vez que o pedido de conexão pode não funcionar)
+        c) não importa o número de vezes que eu chamar o método estático, a conexão tem que ser a mesma
+        d) o programador não pode chamar close diretamente. Ela só pode ser fechada através da própria ConnectionFactory
+        */
+
 
 
     </script>
