@@ -38,6 +38,18 @@ class NegociacaoController {
             new Mensagem(), ['texto'], model =>
             this._mensagemView.update(model));
             */
+
+        ConnectionFactory // listando todas as negociações na lista de negociações
+            .getConnection()
+            .then(connection => {
+                new NegociacaoDao(connection)
+                    .listaTodos()
+                    .then(negociacoes => {
+                        negociacoes.forEach(negociacao => {
+                            this._listaNegociacoes.adiciona(negociacao)
+                        });
+                    });
+            });
         
         
 
