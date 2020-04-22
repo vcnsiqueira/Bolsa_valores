@@ -45,12 +45,23 @@ class NegociacaoController {
 
     adiciona(event) { // adicionar a negociação em uma lista
         
-        event.preventDefault();   
-        this._listaNegociacoes.adiciona(this._criaNegociacao());
+        event.preventDefault();  
         
-        this._mensagem.texto = 'Negociação adicionada com sucesso!';
-        this._limpaFormulario();
-
+        ConnectionFactory
+            .getConnection() // criando a conexão com o banco de dados
+            .then(connection =>  {
+                
+                let negociacao = this._criaNegociacao();
+                
+                new NegociacaoDao(connection)
+                    .adiciona(negociacao)
+                    .then(() => {
+                        this._listaNegociacoes.adiciona(negociacao);
+                        this._mensagem.texto = 'Negociacao adicionada com sucesso!';
+                        this._limpaFormulario();
+                    })
+            })
+            .catch(erro => this._mensagem.texto = erro);
     }
 
     importaNegociacoes() {
@@ -136,8 +147,8 @@ class NegociacaoController {
         let data = DateHelper.textToDate(this._inputData.value);
         return new Negociacao(
             data,
-            this._inputQuantidade.value,
-            this._inputValor.value
+            parseInt(this._inputQuantidade.value),
+            parseFloat(this._inputValor.value)
         );
 
     }
