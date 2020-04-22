@@ -48,4 +48,19 @@ class NegociacaoDao {
         })
     }
 
+    apagaTodos() {
+        return new Promise((resolve, reject) => {
+            let request = this._connection
+                .transaction([this._store], 'readwrite') // abrindo uma transação no object store negociações de leitura e escrita
+                .objectStore(this._store) // obtendo a object store
+                .clear(); // requisição para apagar a object store
+            
+            request.onsuccess = e => resolve('Negociações removidas com sucesso!');
+            request.onerror = e => {
+                console.log(e.target.error);
+                reject('Não foi possível remover as negociações!')
+            };
+        })
+    }
+
 }
