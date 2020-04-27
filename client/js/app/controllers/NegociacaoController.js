@@ -37,8 +37,13 @@ class NegociacaoController {
         /*ProxyFactory.create(
             new Mensagem(), ['texto'], model =>
             this._mensagemView.update(model));
-            */
+            */      
+        
+        this._init();
+    }
 
+    _init() {
+        
         ConnectionFactory // listando todas as negociações na lista de negociações
             .getConnection()
             .then(connection => {
@@ -54,8 +59,9 @@ class NegociacaoController {
                         this._mensagem.texto = erro;
                     })
             });
-        
-        
+
+        setInterval(() => { // aplicando a função que importa as negociaçõea a cada 3 segundos
+            this.importaNegociacoes()}, 3000);
 
     }
 
