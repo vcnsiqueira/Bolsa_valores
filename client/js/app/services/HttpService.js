@@ -1,13 +1,25 @@
 class HttpService {
 
+    _handleErrors(res) {  // Função para verificar se houve erro na requisição pela fetch API
+        if(!res.ok) throw new Error(res.statusText);
+        return res;
+    }
+    
     get(url) {
+
+        return fetch(url)
+            .then(res => this._handleErrors(res))
+            .then(res => res.json());
+    }
+    
+    /*get(url) {
         return new Promise((resolve, reject) => {
 
             let xhr = new XMLHttpRequest(); // criando uma instância de XMLHttpRequest
 
             xhr.open('GET', url); // abrindo com o método GET o endereço do localhost:3000/negociacoes/semana
 
-            /* configurações */
+            
             xhr.onreadystatechange = () => {
                 if(xhr.readyState == 4) {
                     if(xhr.status == 200) {
@@ -21,9 +33,18 @@ class HttpService {
             xhr.send();
 
         });
-    }
+    }*/
 
     post(url, dado) {
+        return fetch(url, {
+            headers: { 'Content-type' : 'application/json' },
+            method: 'post',
+            body: JSON.stringify(dado)
+        })
+            .then(res => this._handleErrors(res))
+    }
+
+    /*post(url, dado) {
 
         return new Promise((resolve, reject) => {
 
@@ -45,6 +66,6 @@ class HttpService {
 
         });
 
-    }
+    }*/
 
 }
